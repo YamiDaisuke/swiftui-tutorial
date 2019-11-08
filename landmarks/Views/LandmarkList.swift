@@ -29,7 +29,6 @@ struct LandmarkList: View {
             .navigationBarTitle(Text("Landmarks"))
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .padding()
     }
 }
 
