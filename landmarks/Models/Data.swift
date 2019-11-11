@@ -11,22 +11,23 @@ import UIKit
 import SwiftUI
 
 let landmarkData: [Landmark] = load("landmarkData.json")
+let features = landmarkData.filter { $0.isFeatured }
 let hikeData: [Hike] = load("hikeData.json")
 
 func load<T: Decodable>(_ filename: String) -> T {
     let data: Data
-
+    
     guard let file = Bundle.main.url(forResource: filename, withExtension: nil)
     else {
         fatalError("Couldn't find \(filename) in main bundle.")
     }
-
+    
     do {
         data = try Data(contentsOf: file)
     } catch {
         fatalError("Couldn't load \(filename) from main bundle:\n\(error)")
     }
-
+    
     do {
         let decoder = JSONDecoder()
         return try decoder.decode(T.self, from: data)
@@ -40,12 +41,12 @@ final class ImageStore {
     fileprivate var images: _ImageDictionary = [:]
 
     fileprivate static var scale = 2
-
+    
     static var shared = ImageStore()
-
+    
     func image(name: String) -> Image {
         let index = _guaranteeImage(name: name)
-
+        
         return Image(images.values[index], scale: CGFloat(ImageStore.scale), label: Text(verbatim: name))
     }
 
@@ -59,13 +60,12 @@ final class ImageStore {
         }
         return image
     }
-
+    
     fileprivate func _guaranteeImage(name: String) -> _ImageDictionary.Index {
         if let index = images.index(forKey: name) { return index }
-
+        
         images[name] = ImageStore.loadImage(name: name)
         return images.index(forKey: name)!
     }
 }
-
 
